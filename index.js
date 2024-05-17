@@ -25,9 +25,18 @@ const client = new MongoClient(uri, {
 
 const run = async () => {
     try {
+        const HotelDB = client.db("HotelDB")
+        const RoomCollection = HotelDB.collection("RoomCollection")
 
         app.get('/', async (req, res) => {
             res.send("Cox's Perl is Running")
+        })
+
+        app.get('/rooms', async (req, res) => {
+            const Query = { availability: true }
+            const Cursor = RoomCollection.find(Query)
+            const Result = await Cursor.toArray();
+            res.send(Result)
         })
 
         await client.db("admin").command({ ping: 1 });
